@@ -1,0 +1,57 @@
+@(courses: List[Course], langs: Seq[Lang], lang: Lang, course: Option[Course], enrolments: List[(Student,Double)], searchForm: Form[SearchField])(implicit flash: play.api.mvc.Flash)
+
+@import helper._
+
+@main(lang) {
+    
+ 	<div class="languageSelection">
+    	@form(routes.Application.setLang) {
+		@Messages("AvailableLanguages")(lang)
+	    <select name="lang">
+		 @langs.map { lang => 
+      		<option value="@lang.language">@Messages(lang.language)(lang)</option>
+    	}
+	    </select>
+	    <input type="submit" value="@Messages("Submit")(lang)">
+	}
+    </div>
+
+    <h2 class="result">@flash.get("message").getOrElse("")</h2>
+    
+    @if(course.isEmpty) {
+     <p>@Messages("SelectCourseCode")(lang)</p>
+    } else {
+     <p>@Messages("Course")(lang): @course.get.name (@course.get.code)</p>
+     <table>
+        <tr>
+        <th>@Messages("FirstName")(lang)</th>
+        <th>@Messages("LastName")(lang)</th>
+        <th>@Messages("Email")(lang)</th>
+        <th>@Messages("Lat")(lang)</th>
+        <th>@Messages("Long")(lang)</th>
+        <th>@Messages("Grade")(lang)</th>
+        </tr>
+        @enrolments.map { t =>
+        <tr>
+         <td>@t._1.firstName</td>
+         <td>@t._1.lastName</td>
+         <td>@t._1.email</td>
+         <td>@t._1.lat</td>
+         <td>@t._1.long</td>
+         <td>@t._2</td>
+      	<tr>
+      	}
+      </tr>
+     </table>
+    }
+    @form(routes.Application.searchEnrolment) {
+      <select name="course">
+       @courses.map { c =>
+         <option value="@c.code">@c.code</option>
+       }
+      </select>
+      <input type="submit" value="@Messages("Search")(lang) ">
+        
+    }
+    
+}

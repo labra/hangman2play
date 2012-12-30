@@ -1,0 +1,28 @@
+@(langs: Seq[Lang], lang: Lang)
+
+@import helper._
+
+@main(lang) {
+   
+   <div class="languageSelection">
+    @form(routes.Application.setLang) {
+		@Messages("AvailableLanguages")(lang)
+	    <select name="lang">
+		 @langs.map { lang => 
+      		<option value="@lang.language">@Messages(lang.language)(lang)</option>
+    	}
+	    </select>
+	    <input type="submit" >
+	}
+    </div>
+      
+   <h2>@Messages("Admin")(lang)</h2>
+
+   <ul>
+    <a href="@routes.Application.index">@Messages("Home")(lang)</a>
+    <a href="@routes.Admin.courses">@Messages("Courses")(lang)</a>
+    <a href="@routes.Admin.students">@Messages("Students")(lang)</a>
+    <a href="@routes.Admin.enrolments">@Messages("Enrolments")(lang)</a>
+    <a href="@routes.Admin.logout">@Messages("Logout")(lang)</a>
+   </ul>
+}

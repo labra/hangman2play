@@ -1,0 +1,164 @@
+html {
+ height: 100%;
+ overflow: hidden;
+ background-image: -webkit-linear-gradient(white,gray);
+ background-image: -moz-linear-gradient(white,gray);
+ background-image: -ms-linear-gradient(white,gray);
+ background-image: -o-linear-gradient(white,gray);
+ background-image: linear-gradient(white,gray);
+}
+
+body {
+ margin: 0;
+ padding: 0;
+ height: 100%;
+}
+
+#principal h1 {
+ margin: 0px;
+ font-family: PortcullionBold ;
+ font-variant: small-caps;
+ color: black;
+ font-size: 700%;
+ text-align: center;
+ text-shadow: #F2F2F2 2px 2px 2px;
+}
+
+#campoLetras {
+ float:left;
+ width: 50%;
+}
+
+#letras {
+ font-family: Lobster ;
+ font-size: xx-large;
+ color: green;
+}
+
+#intentos {
+ float:right;
+ font-family: Monospace ;
+ font-size: normal;
+ color: red;
+ letter-spacing: 0.5em;
+}
+
+#dibujo {
+ text-align: center;
+ width: 40%; 
+ float: right;
+} 
+
+#dibujo:hover {
+ -webkit-transform: rotate(10deg);
+ -moz-transform: rotate(10deg);
+ -o-transform: rotate(10deg);
+ transform: rotate(10deg);
+}
+
+#idCanvas {
+ border: 3px outset;
+}
+
+.botLetra {
+ height: 2em;
+ width: 2em;
+ font-size: 1.5em;
+ font-family: Lobster; 
+ -webkit-box-shadow: 3px 3px 5px 6px grey;
+ -moz-box-shadow: 3px 3px 5px 6px grey;
+ box-shadow: 3px 3px 5px 6px grey;
+}
+
+#panelAyuda {
+	height: 100%;
+	width: 20em;
+	position: absolute;
+	top: 0px;
+	left:100%;
+    -webkit-transition: left 0.3s ease-in;
+    -moz-transition: left 0.3s ease-in;
+    -o-transition: left 0.3s ease-in;
+    -ms-transition: left 0.3s ease-in;
+    transition: left 0.3s ease-in; 
+}
+
+#panelAyuda:hover {
+	left : 70%;
+}
+
+#Ayuda {
+	height: 100%;
+	width: 60%;
+	padding: 5px;
+	border-left: 1px solid #EEE;
+	background: gray;
+	background-image: -webkit-linear-gradient(left, #CCC 0%, #AAA 100%);
+	background-image: -ms-linear-gradient(left, #CCC 0%, #AAA 100%);
+	background-image: -o-linear-gradient(left, #CCC 0%, #AAA 100%);
+	background-image: -moz-linear-gradient(left, #CCC 0%, #AAA 100%);
+	background-image: linear-gradient(left, #CCC 0%, #AAA 100%);
+}
+
+
+#panelAyuda:hover #pedirAyuda {
+}
+
+#pedirAyuda {
+    position: relative;
+	top: 50% ;
+	left: -55%;
+    display:block;
+	text-align: center;
+	font-weight: bold;
+	background-color: #CCC;
+
+	-webkit-transform: rotate(-90deg); 
+	-moz-transform: rotate(-90deg);	
+	-ms-transform: rotate(-90deg); 
+	-o-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+	text-shadow: #F2F2F2 1px 1px 1px;
+}
+
+#panelAyuda h1 { 
+    font-family: serif;
+	font-size: large;
+	padding: 0px; 
+	margin: 0px; 
+	text-shadow: #F2F2F2 1px 1px 1px;
+} 
+
+footer {
+	background-color: rgba(255, 255, 255, 0.3);
+	width: 100%;
+	font-size: smaller;
+	clear:both;
+	position:absolute;
+	bottom: 0%;
+	text-align: right;
+}
+
+
+@font-face {
+    font-family: 'Lobster';
+    src: url('fonts/Lobster_1.3-webfont.eot');
+    src: url('fonts/Lobster_1.3-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Lobster_1.3-webfont.woff') format('woff'),
+         url('fonts/Lobster_1.3-webfont.ttf') format('truetype'),
+         url('fonts/Lobster_1.3-webfont.svg#Lobster13Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'PortcullionBold';
+    src: url('fonts/Portcullion-webfont.eot');
+    src: url('fonts/Portcullion-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Portcullion-webfont.woff') format('woff'),
+         url('fonts/Portcullion-webfont.ttf') format('truetype'),
+         url('fonts/Portcullion-webfont.svg#PortcullionBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

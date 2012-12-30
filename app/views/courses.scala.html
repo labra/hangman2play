@@ -1,0 +1,46 @@
+@(lang:Lang, courses: List[Course], courseForm: Form[Course])
+
+@import helper._
+
+@main(lang) {
+    
+    <h2>Admin Courses</h2>
+    
+    <p>Number of Courses: @courses.size</p>
+    <table>
+     <tr>
+     <th>@Messages("Code")</th>
+     <th>@Messages("Name")</th>
+     <th>@Messages("Starts")</th>
+     <th>@Messages("Ends")</th>
+     </tr>
+        @courses.map { course =>
+            <tr>
+            <td>@course.id</td>
+            <td>@course.code</td>
+            <td>@course.name</td>
+            <td>@course.starts</td>
+            <td>@course.ends</td>
+            <td>
+                @form(routes.Admin.deleteCourse(course.id.get)) {
+                    <input type="submit" value="Delete">
+                }
+            </td>
+        }
+    </table>
+    
+    <h2>Course</h2>
+    
+    @form(routes.Admin.newCourse) {
+        
+        @inputText(courseForm("id"), '_label -> "id")
+        @inputText(courseForm("code"), '_label -> "code")
+        @inputText(courseForm("name"), '_label -> "name")
+        @inputText(courseForm("starts"), '_label -> "starts")
+        @inputText(courseForm("ends"), '_label -> "ends") 
+        
+        <input type="submit" value="@Messages("Create") ">
+        
+    }
+    
+}

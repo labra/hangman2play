@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+ <head>
+  <title>Ahorcado</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="ahorcado.css" >
+  <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+  <script src="modernizr.js"> </script>
+  <script src="ahorcado.js" > </script>
+ </head>
+ <body manifest="ahorcado.manifest">
+  <section id="principal">
+   <h1>Ahorcado</h1>
+    <fieldset id="campoLetras">
+	<legend>Adivina la palabra pulsando letras</legend>
+	<output id="letras"> </output>
+	<hr>
+	<div id="botonesLetras"></div>
+   </fieldset>
+
+   <div id="dibujo">
+    <canvas id="idCanvas" width="200" height="200">
+	  El navegador que está utilizando no permite realizar dibujos.
+	</canvas>
+   </div>
+
+  <section id="panelAyuda">
+   <a id="pedirAyuda">Mostrar ayuda</a>
+   <article id="Ayuda">
+    <h1>Ayuda</h1>
+    <p>El juego del ahorcado consiste en ir pulsando teclas hasta que se consigue adivinar una palabra.</p>
+	<p>A modo de pistas, se indican cuántos caracteres tiene la palaba.</p>
+	<p>Se contabiliza el número de fallos, y por cada fallo se dibuja una parte del cuerpo de un personaje
+	 condenado a ser ahorcado.</p>
+	<p>Si se dibuja el cuerpo entero sin acertar la palabra, se pierde el juego.</p>
+	<p><a href="http://en.wikipedia.org/wiki/Hangman_(game)" 
+		  hreflang="en">Más información</a></p>
+   </article>
+  </section>
+
+  <footer>
+   Realizado por:
+  <address><a href="http://www.di.uniovi.es/~labra">Jose Emilio Labra Gayo</a></address>
+  </footer>
+</body>
+</html>
+

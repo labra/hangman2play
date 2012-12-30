@@ -1,0 +1,18 @@
+CACHE MANIFEST
+CACHE:
+ahorcado.html
+ahorcado.css
+ahorcado.js
+palabras.json
+fonts/Lobster-1.3-webfont.eot
+fonts/Lobster-1.3-webfont.svg
+fonts/Lobster-1.3-webfont.ttf
+fonts/Lobster-1.3-webfont.woff
+fonts/Portcullion-webfont.eot
+fonts/Portcullion-webfont.svg
+fonts/Portcullion-webfont.ttf
+fonts/Portcullion-webfont.woff
+images/deco-frame.jpg
+
+NETWORK:
+*

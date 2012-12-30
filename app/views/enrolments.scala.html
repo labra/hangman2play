@@ -1,0 +1,46 @@
+@(lang:Lang, enrolments: List[ViewEnrolment], enrolmentForm: Form[ViewEnrolment])
+
+@import helper._
+
+@main(lang) {
+    
+    <h2>Admin Enrolments</h2>
+    <p>Number of enrolments: @enrolments.size</h2>
+    
+    <table>
+     <tr>
+      <th>Course</th>
+      <th>DNI</th>
+      <th>Note</th>
+     </tr>
+        @enrolments.map { t =>
+        <tr>
+            <td>@t.course</td>
+            <td>@t.dni</td>
+            <td>@t.grade</td>
+            <td>@form(routes.Admin.deleteEnrolment(t.id)) {
+                    <input type="submit" value="@Messages("Delete")(lang)">
+                }</td>
+        </tr>
+        }
+    </table>
+
+    <h2>Add enrolment</h2>
+    
+    @form(routes.Admin.newEnrolment()) {
+        
+        <fieldset>
+        	<input type="hidden" name="id" value='0' >  
+            @inputText(enrolmentForm("course"), '_label -> "Course")
+            @inputText(enrolmentForm("dni"), '_label -> "DNI")
+            @inputText(enrolmentForm("grade"), '_label -> "Grade")
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create Enrolment" class="btn primary"> or 
+            <a href="@routes.Application.index()" class="btn">Cancel</a> 
+        </div>
+    }
+    
+    
+}

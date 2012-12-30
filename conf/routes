@@ -1,0 +1,34 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           		controllers.Application.index
+
+# Authentication
+GET     /login                              controllers.Admin.login
+POST    /login                              controllers.Admin.authenticate
+GET     /logout                             controllers.Admin.logout
+
+GET     /search								controllers.Application.searchEnrolment
+GET     /setLang							controllers.Application.setLang
+GET     /about								controllers.Application.about
+
+GET     /course/:code.xml					controllers.Application.courseXML(code: String)
+
+
+GET     /admin								controllers.Admin.admin
+GET     /admin/courses                  	controllers.Admin.courses
+POST    /admin/courses                  	controllers.Admin.newCourse
+POST    /admin/courses/:id/delete       	controllers.Admin.deleteCourse(id: Long)
+
+GET     /admin/students                  	controllers.Admin.students
+POST    /admin/students                  	controllers.Admin.newStudent
+POST    /admin/students/:id/delete       	controllers.Admin.deleteStudent(id: Long)
+
+GET     /admin/enrolments                 	controllers.Admin.enrolments
+POST    /admin/enrolments                  	controllers.Admin.newEnrolment
+POST    /admin/enrolments/:id/delete       	controllers.Admin.deleteEnrolment(id: Long)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
