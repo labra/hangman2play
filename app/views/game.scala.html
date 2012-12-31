@@ -1,8 +1,67 @@
-@(lang : Lang)
+@(langs: Seq[Lang], lang : Lang)
 
 @import helper._
 
-@main(lang) {
- <h1>Game</h1>
- <a href="ahorcado.html">Ahorcado</a>
-}
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>@Messages("Title")(lang)</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="ahorcado.css" >
+  <script type="text/javascript" 
+  		  src="jquery-1.7.2.min.js"></script>
+  <script src="modernizr.js"> </script>
+  <script src="ahorcado.js" > </script>
+ </head>
+ <body manifest="ahorcado.manifest">
+ 	<div class="languageSelection">
+    @form(routes.Words.setLang) {
+		@Messages("AvailableLanguages")(lang)
+	    <select name="lang">
+		 @langs.map { lang => 
+      		<option value="@lang.language">@Messages(lang.language)(lang)</option>
+    	}
+	    </select>
+	    <input type="submit" >
+	}
+    </div>
+    
+  <section id="principal">
+   <h1>@Messages("Title")(lang)</h1>
+    <fieldset id="campoLetras">
+	<legend>@Messages("Guess")(lang). (@Messages(lang.code)(lang))</legend>
+	<output id="letras"> </output>
+	<hr>
+	<div id="botonesLetras"></div>
+   </fieldset>
+
+   <div id="dibujo">
+    <canvas id="idCanvas" width="200" height="200">
+	  @Messages("NoCanvas")(lang)
+	</canvas>
+   </div>
+
+  <section id="panelAyuda">
+   <a id="pedirAyuda">@Messages("ShowHelp")(lang)</a>
+   <article id="Ayuda">
+    <h1>@Messages("Help")(lang)</h1>
+    <p>El juego consiste en ir pulsando teclas 
+       hasta que se adivine la palabra.</p>
+	<p>A modo de pistas, se indican cuántos 
+	   caracteres tiene la palaba.</p>
+	<p>Se contabiliza el número de fallos, y por cada fallo se 
+	   dibuja una parte del cuerpo.</p>
+	<p>Si se dibuja el cuerpo entero, 
+	   se pierde el juego.</p>
+	<p><a href="http://en.wikipedia.org/wiki/Hangman_(game)" 
+		  hreflang="en">@Messages("MoreInfo")(lang)</a></p>
+   </article>
+  </section>
+
+  <footer>
+   @Messages("MadeBy")(lang)
+  <address><a href="http://www.di.uniovi.es/~labra">Jose Emilio Labra Gayo</a></address>
+  </footer>
+</body>
+</html>

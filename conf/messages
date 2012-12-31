@@ -2,4 +2,4 @@ Greeting=Hi from default
 Create=Create
 Delete=Delete
 Search=Search
-CourseNotFound=Course not found
+LanguageNotFound=Course not found

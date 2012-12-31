@@ -15,9 +15,11 @@ import play.api.libs.json._
 
 object Game extends Controller {
   
+  def langs : Seq[Lang] = Lang.availables
+   
   def index = Action { implicit request =>
     val lang = Words.getLang(request,session)
-    Ok(views.html.game(lang))
+    Ok(views.html.game(langs,lang))
   }
 
   def about = Action { implicit request =>

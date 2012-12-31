@@ -44,7 +44,7 @@ $(document).ready(function () {
 );
 
 function getPalabras() {
-
+ 
  // Si no se pueden obtener de otro sitio, coger las predefinidas...
  return palabrasOffline;
 }
