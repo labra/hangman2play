@@ -62,117 +62,77 @@ object Admin extends Controller  with Secured {
   }
   
   
-  def newCourse = IsAuthenticated { username => implicit request =>
-  	courseForm.bindFromRequest.fold(
+  def newLanguage = IsAuthenticated { username => implicit request =>
+  	languageForm.bindFromRequest.fold(
     errors => Ok("Errors" + errors), // BadRequest(views.html.index(searchForm)),
-    course => {
-      Course.create(course)
-      Redirect(routes.Admin.courses)
+    language => {
+      Language.create(language)
+      Redirect(routes.Admin.languages)
     }
    )
   }	  
  
-  def newStudent = IsAuthenticated { username => implicit request =>
- 	studentForm.bindFromRequest.fold(
-    errors => Ok("Error " + errors.toString()), // BadRequest(views.html.index(Language.all(), errors)),
-    student => {
-      Student.create(student)
-      Redirect(routes.Admin.students)
-    }
-   ) 
-  }
-  
-   def newEnrolment = IsAuthenticated { username =>
+   def newWord = IsAuthenticated { username =>
     implicit request =>
-  	 enrolmentForm.bindFromRequest.fold(
+  	 wordForm.bindFromRequest.fold(
       errors => Ok("Error " + errors.toString()), // BadRequest(views.html.index(Trans.all(), errors)),
-      vt => createFromView(vt)
+      vw => createFromView(vw)
    )
   }
 
-  def createFromView(vt: ViewEnrolment) : Result = {
-        Student.lookup(vt.dni) match {
-          case None => Ok("Student " + vt.dni + " not found. Create student before")
-          case Some(studentId) =>
-            Course.lookup(vt.course) match {
-              case None => Ok("Course " + vt.course + " not found. Create Course before")
-              case Some(courseId) => 
-                Enrolment.create(courseId,studentId,vt.grade)
-                Redirect(routes.Admin.enrolments)
+  def createFromView(vw: ViewWord) : Result = {
+      Language.lookup(vw.language) match {
+              case None => Ok("Language " + vw.language + " not found. Create Language before")
+              case Some(languageId) => 
+                Word.create(languageId,vw.word)
+                Redirect(routes.Admin.words)
             }
-        }
   }
   
    
-  def deleteCourse(id: Long) = IsAuthenticated { username => implicit request =>
-	  Course.delete(Id(id))
-	  Redirect(routes.Admin.courses)
+  def deleteLanguage(id: Long) = IsAuthenticated { username => implicit request =>
+	  Language.delete(Id(id))
+	  Redirect(routes.Admin.languages)
   }
 
- def deleteStudent(id: Long) = IsAuthenticated { username => implicit request =>
-  Student.delete(Id(id))
-  Redirect(routes.Admin.students)
+ def deleteWord(id: Long) = IsAuthenticated { username => implicit request =>
+  Word.delete(Id(id))
+  Ok("Deleted word " + id)
+  Redirect(routes.Admin.words)
 }
 
- def deleteEnrolment(id: Long) = IsAuthenticated { username => implicit request =>
-  Enrolment.delete(Id(id))
-  Ok("Deleted enrolment " + id)
-  Redirect(routes.Admin.enrolments)
-}
-
-  val courseForm : Form[Course] = Form(
+  val languageForm : Form[Language] = Form(
       mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "code" -> nonEmptyText,
-      "name" -> nonEmptyText,
-      "starts" -> text,
-      "ends" -> text
-      )(Course.apply)(Course.unapply)
+      "name" -> nonEmptyText
+      )(Language.apply)(Language.unapply)
   )
 
   
-  val studentForm : Form[Student] = Form(
-     mapping(
-      "id" -> ignored(NotAssigned:Pk[Long]),
-      "dni" -> text,
-      "firstName" -> text,
-      "lastName" -> text,
-      "email" -> text,
-      "lat" -> of[Double],
-      "long" -> of[Double]
-     )(Student.apply)(Student.unapply)
-  )
-
-  val enrolmentForm : Form[ViewEnrolment] = Form(
+  val wordForm : Form[ViewWord] = Form(
      mapping(
       "id" -> of[Long],
-      "course" -> nonEmptyText,
-      "dni" -> nonEmptyText,
-      "grade" -> of[Double]
-     )(ViewEnrolment.apply)(ViewEnrolment.unapply)
+      "language" -> nonEmptyText,
+      "word" -> nonEmptyText
+     )(ViewWord.apply)(ViewWord.unapply)
   )
   
-   def courses = Action { implicit request => 
+   def languages = Action { implicit request => 
       val lang = request.session.get("prefLang").getOrElse(defaultLang)
-	  Ok(views.html.courses(Lang(lang), Course.all(), courseForm))
+	  Ok(views.html.languages(Lang(lang), Language.all(), languageForm))
   }
 
-  def students = Action { implicit request =>
-     val lang = request.session.get("prefLang").getOrElse(defaultLang)
-     Ok(views.html.students(Lang(lang), Student.all(), studentForm))
-  }
-
-  def viewEnrolments : List[ViewEnrolment] = {
-    Enrolment.all().map(t => ViewEnrolment(t.id.get,
-        Course.findCourseName(t.courseId).getOrElse("Not found"), 
-        Student.findDNI(t.studentId).getOrElse("Not found"),
-        t.grade.toDouble)
+  def viewWords : List[ViewWord] = {
+    Word.all().map(t => ViewWord(t.id.get,
+        Language.findLanguageName(t.languageId).getOrElse("Not found"), 
+        t.word)
     )
   }
 
-  def enrolments = Action { request =>
+  def words = Action { request =>
     val lang = request.session.get("prefLang").getOrElse(defaultLang)
-    Ok(views.html.enrolments(Lang(lang), viewEnrolments, enrolmentForm))
+    Ok(views.html.words(Lang(lang), viewWords, wordForm))
   }
 
 }

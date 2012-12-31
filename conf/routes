@@ -3,32 +3,28 @@
 # ~~~~
 
 # Home page
-GET     /                           		controllers.Application.index
+
+GET     /                                   controllers.Game.index
+GET     /words                           	controllers.Words.index
 
 # Authentication
 GET     /login                              controllers.Admin.login
 POST    /login                              controllers.Admin.authenticate
 GET     /logout                             controllers.Admin.logout
 
-GET     /search								controllers.Application.searchEnrolment
-GET     /setLang							controllers.Application.setLang
-GET     /about								controllers.Application.about
-
-GET     /course/:code.xml					controllers.Application.courseXML(code: String)
-
+GET     /search								controllers.Words.searchWords
+GET		/words/:language.json				controllers.Words.searchWordsJson(language : String)
+GET     /setLang							controllers.Words.setLang
+GET     /about								controllers.Game.about
 
 GET     /admin								controllers.Admin.admin
-GET     /admin/courses                  	controllers.Admin.courses
-POST    /admin/courses                  	controllers.Admin.newCourse
-POST    /admin/courses/:id/delete       	controllers.Admin.deleteCourse(id: Long)
+GET     /admin/languages                  	controllers.Admin.languages
+POST    /admin/languages                  	controllers.Admin.newLanguage
+POST    /admin/languages/:id/delete       	controllers.Admin.deleteLanguage(id: Long)
 
-GET     /admin/students                  	controllers.Admin.students
-POST    /admin/students                  	controllers.Admin.newStudent
-POST    /admin/students/:id/delete       	controllers.Admin.deleteStudent(id: Long)
-
-GET     /admin/enrolments                 	controllers.Admin.enrolments
-POST    /admin/enrolments                  	controllers.Admin.newEnrolment
-POST    /admin/enrolments/:id/delete       	controllers.Admin.deleteEnrolment(id: Long)
+GET     /admin/words                 	controllers.Admin.words
+POST    /admin/words                  	controllers.Admin.newWord
+POST    /admin/words/:id/delete       	controllers.Admin.deleteWord(id: Long)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /*file               controllers.Assets.at(path="/public", file)

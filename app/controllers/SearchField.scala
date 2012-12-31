@@ -1,3 +1,3 @@
 package controllers
 
-case class SearchField(course : String)
+case class SearchField(language : String)

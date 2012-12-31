@@ -1,0 +1,43 @@
+@(lang:Lang, words: List[ViewWord], wordForm: Form[ViewWord])
+
+@import helper._
+
+@main(lang) {
+    
+    <h2>Admin Words</h2>
+    <p>Number of words: @words.size</h2>
+    
+    <table>
+     <tr>
+      <th>Language</th>
+      <th>Word</th>
+     </tr>
+        @words.map { t =>
+        <tr>
+            <td>@t.language</td>
+            <td>@t.word</td>
+            <td>@form(routes.Admin.deleteWord(t.id)) {
+                    <input type="submit" value="@Messages("Delete")(lang)">
+                }</td>
+        </tr>
+        }
+    </table>
+
+    <h2>Add word</h2>
+    
+    @form(routes.Admin.newWord()) {
+        
+        <fieldset>
+        	<input type="hidden" name="id" value='0' >  
+            @inputText(wordForm("language"), '_label -> "Language")
+            @inputText(wordForm("word"), '_label -> "Word")
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Create word" class="btn primary"> or 
+            <a href="@routes.Words.index()" class="btn">Cancel</a> 
+        </div>
+    }
+    
+    
+}

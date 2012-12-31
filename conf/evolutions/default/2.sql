@@ -1,24 +1,26 @@
-# Database schema for languages
+# Database schema for words
  
 # --- !Ups
 
 
-CREATE SEQUENCE student_id_seq start with 1000;
+CREATE SEQUENCE words_id_seq start with 1000;
 
-CREATE TABLE student (
-    id 				bigint NOT NULL DEFAULT nextval('student_id_seq'),
-    dni 			varchar(100) not null,
-    firstName 		varchar(255) not null,
-    lastName 		varchar(255) not null,
-    email			varchar(255) not null,
-    lat 		    double,
-    long			double,
-    constraint 		pk_student primary key (id)
+CREATE TABLE words (
+    id 				bigint NOT NULL DEFAULT nextval('words_id_seq') not null,
+    languageId 		bigint not null,
+    word 			varchar(256) not null,
+    constraint 		pk_word primary key (id)
 );
 
 
+alter table words add constraint fk_language_1 foreign key (languageId) references language (id) on delete restrict on update restrict;
+
+create index ix_language_iri_1 on words (languageId);
+ 
 # --- !Downs
 
-DROP TABLE if exists student;
+SET REFERENTIAL_INTEGRITY FALSE;
 
-DROP SEQUENCE if exists student_id_seq;
+DROP TABLE if exists words;
+
+DROP SEQUENCE if exists words_id_seq;

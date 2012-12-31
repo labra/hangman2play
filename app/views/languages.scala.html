@@ -1,0 +1,40 @@
+@(lang:Lang, languages: List[Language], languageForm: Form[Language])
+
+@import helper._
+
+@main(lang) {
+    
+    <h2>Admin Languages</h2>
+    
+    <p>Number of Languages: @languages.size</p>
+    <table>
+     <tr>
+     <th>@Messages("Code")</th>
+     <th>@Messages("Name")</th>
+     </tr>
+        @languages.map { language =>
+            <tr>
+            <td>@language.id</td>
+            <td>@language.code</td>
+            <td>@language.name</td>
+            <td>
+                @form(routes.Admin.deleteLanguage(language.id.get)) {
+                    <input type="submit" value="Delete">
+                }
+            </td>
+        }
+    </table>
+    
+    <h2>New language</h2>
+    
+    @form(routes.Admin.newLanguage) {
+        
+        @inputText(languageForm("id"), '_label -> "id")
+        @inputText(languageForm("code"), '_label -> "code")
+        @inputText(languageForm("name"), '_label -> "name")
+        
+        <input type="submit" value="@Messages("Create") ">
+        
+    }
+    
+}
