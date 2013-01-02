@@ -1,169 +1,225 @@
 ﻿var canvas;
 var ctx;
-var palabrasOffline = new Array("BIENVENIDO","HOLA","Palabra");
-var palabra; 
-var aciertos = new Array(); 
-var fallos = new Array(); 
+var words; 						// Available words
+var alphabet;					// alphabet of a given language
+var language; 					// Selected language
+var word; 						// Word to guess
+var successes = new Array(); 	// Successes
+var failures = new Array(); 	// Failures
+var divLetters; 
+var divAlphabet; 
 var spanPal;
-var juego = false;  // Indica si hay juego activo
+var inGame = false;  // Active game
 var ls   = false;   // indica si hay almacenamiento local (localStorage)
 
-$(document).ready(function () {
+$(function () {
  
  ls = Modernizr.localstorage;
- palabras = getPalabras();
- 
+
+ language = document.getElementById("language").getAttribute("code"); 
+ alphabet = document.getElementById("language").getAttribute("alphabet");  
+ store("language",language);
+ store("alphabet",alphabet);
+ resetGame = document.getElementById("newGame").getAttribute("value");  
+ divLetters = document.getElementById('letters');
+ divAlphabet = document.getElementById('alphabet');
 
  if (Modernizr.canvas) {
-  canvas = document.getElementById("idCanvas");
-  ctx = canvas.getContext("2d");
- }
- 
- // Crear botones con las letras...
- var divBotones = document.getElementById("botonesLetras");  
- var abecedario = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
- for (var i = 0; i < abecedario.length; i++) {
-   var letra = abecedario.charAt(i);
-   var botLetra = document.createElement("input");
-   botLetra.setAttribute("type","button");
-   botLetra.setAttribute("class","botLetra");
-   botLetra.setAttribute("value",letra);
-   botLetra.setAttribute("id",letra);
-   botLetra.setAttribute("onclick","encajarLetra('"+letra+"')");
-   divBotones.appendChild(botLetra);
- }; 
- 
- // Intenta recuperar juego existente
- recuperarJuego();
- 
- // Si no hay juego, se crea uno
- if (!juego) nuevoJuego();
-
- pintarJuego();
+	  canvas = document.getElementById("idCanvas");
+	  ctx = canvas.getContext("2d");
 }
+
+ if (resetGame == 'true') newGame();
+ getGame();
+ if (!inGame) newGame();
+}
+
 );
 
-function getPalabras() {
- 
- // Si no se pueden obtener de otro sitio, coger las predefinidas...
- return palabrasOffline;
+function clearAlphabet(){
+  while (divAlphabet.hasChildNodes()) {
+		   divAlphabet.removeChild(divAlphabet.lastChild);
+  } 
 }
 
-function recuperarJuego() {
+function paintAlphabet() {
+  clearAlphabet();  
+
+  for (var i = 0; i < alphabet.length; i++) {
+	   var letter = alphabet.charAt(i);
+	   var letterButton = document.createElement("input");
+	   letterButton.setAttribute("type","button");
+	   letterButton.setAttribute("class","letterButton");
+	   letterButton.setAttribute("value",letter);
+	   letterButton.setAttribute("id",letter);
+	   letterButton.setAttribute("onclick","matchLetter('"+letter+"')");
+	   divAlphabet.appendChild(letterButton);
+  }; 
+}
+
+function getWords() {
+ $.getJSON("/words/"+ language + ".json", function(data) {
+	 words = [];
+	 var output = "<ul>";
+	 for (var i in data.words) {
+		      output+="<li>" + data.words[i] + "</li>";
+		      words.push(data.words[i]) ;
+	}
+	output+="</ul>";
+	document.getElementById("placeholder").innerHTML=output;
+
+	startGame();
+ });
+}
+
+function getGame() {
  if (ls) {
-   juego = recuperar('juego');
-   if (juego) {
-	palabra = recuperar('palabra');
-	aciertos = recuperar('aciertos');
-	fallos = recuperar('fallos');
-   }
+   inGame = retrieve('inGame');
+   if (inGame) {
+	word = retrieve('word');
+	words = retrieve('words');
+	language = retrieve('language');
+	successes = retrieve('successes');
+	failures = retrieve('failures');
+	alphabet = retrieve('alphabet');
+	paintGame();
+   } 
  }
 }
 
-function guardar(clave,valor) {
+function store(clave,valor) {
  if (ls) {
   window.localStorage.setItem(clave,JSON.stringify(valor));
  }
 }
 
-function recuperar(clave) {
+function retrieve(clave) {
  if (ls) {
   return JSON.parse(window.localStorage.getItem(clave));
  }
 }
 
-function nuevoJuego() {
+function newGame() {
+  $.getJSON("/words/"+ language + ".json", function(data) {
+		 words = [];
+		 for (var i in data.words) {
+			      words.push(data.words[i]) ;
+		 }
+		 clearLetters();
+		 clearAlphabet();
+		  
+		 word = words[Math.floor(Math.random()*words.length)].toUpperCase();
+		 successes = [];
+		 failures = [];
+		  
+		 $("#words").html(words.toString);
+		 $("#word").html(word);
+		 $("#languageInfo").html(language);
+		 $("#alphabetInfo").html(alphabet);
+		 $("#successes").html(successes.toString);
+		 $("#failures").html(failures.toString);
 
-  palabra = palabras[Math.floor(Math.random()*palabras.length)].toUpperCase();
-  // Limpiar lista de aciertos y de fallos
-  aciertos = [];
-  fallos = [];
-
-  if (ls) {
-   guardar('juego',true);
-   guardar('palabra',palabra);
-   guardar('aciertos',aciertos);
-   guardar('fallos',fallos);
-  }
+		 if (ls) {
+		   store('inGame',true);
+		   store('word',word);
+		   store('language',language);
+		   store('words',words);
+		   store('successes',successes);
+		   store('failures',failures);
+		   store('alphabet',alphabet);
+		  }
+		 paintGame();
+	 });
 }
 
-function pintarJuego() {
-  ponLetras();
-  $(".botLetra").css("visibility","visible");
+function paintGame() {
+
+  $("#words").html(words.toString());
+  $("#word").html(word);
+  $("#languageInfo").html(language);
+  $("#alphabet").html(alphabet);
+
+  paintLetters();
+  paintAlphabet();
+  $(".letterButton").css("visibility","visible");
   
   if (canvas) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Poner fondo en gradiente...
-  var grd = ctx.createLinearGradient(0, canvas.height, canvas.width, 0);
-  grd.addColorStop(0, '#ceefff');
-  grd.addColorStop(1, '#52bcff');
-  ctx.fillStyle = grd;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
-  ctx.strokeStyle = "red" ;
-  ctx.fillStyle = "blue" ;
-  
-  for (var i = 1; i <= fallos.length; i++) { 
-   pintarElemento(i);
+  clearCanvas();
+  for (var i = 1; i <= failures.length; i++) { 
+   paintElement(i);
   }
  }
 }
 
-function ponLetras() {
+function clearCanvas() {
+	  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
- // TODO: reescribirlo con JQuery...
- 
- var letras = document.getElementById('letras');
- // Borra todas las letras para volver a pintarlas
- // Igual es más eficiente cambiar las que correspondan 
- // en vez de borrarlas todas para volver a pintarlas...
- while (letras.hasChildNodes()) {
-    letras.removeChild(letras.lastChild);
-  } 
+	  // Gradient background
+	  var grd = ctx.createLinearGradient(0, canvas.height, canvas.width, 0);
+	  grd.addColorStop(0, '#ceefff');
+	  grd.addColorStop(1, '#52bcff');
+	  ctx.fillStyle = grd;
+	  ctx.fillRect(0, 0, canvas.width, canvas.height);
+	  
+	  ctx.strokeStyle = "black" ;
+	  ctx.fillStyle = "blue" ;
+}
 
- // Añade hijos de tipo span por cada letra de la palabra
- for (var i = 0; i < palabra.length; i++) {
-   var caracter = document.createElement("span");
-   caracter.setAttribute("class","letra");
-   if (!letraEnLista(palabra[i],aciertos))  {
-    // Si la letra no está en la lista de aciertos se escribe _
-    caracter.textContent = "_\u00A0";
+function clearLetters(letters) {
+	 
+  while (divLetters.hasChildNodes()) {
+	    divLetters.removeChild(divLetters.lastChild);
+	  } 
+}
+
+function paintLetters() {
+
+ clearLetters();
+
+ // Add span children for each letter in the word
+ for (var i = 0; i < word.length; i++) {
+   var character = document.createElement("span");
+   character.setAttribute("class","letter");
+   if (!letterInWord(word[i],successes))  {
+    // If letter is not in success list, write _
+    character.textContent = "_\u00A0";
    }
    else {
-    caracter.textContent = palabra[i]+"\u00A0";
+    character.textContent = word[i]+"\u00A0";
    }
-   letras.appendChild(caracter); 
+   divLetters.appendChild(character); 
  }
  
 };
 
-function pintarElemento(i){
+function paintElement(i){
  if (i > 6) {
-  finJuego("Has perdido");
+  endGame("You lost");
  } 
  else {
   if (canvas) {
    switch (i) {
-    case 1: dibujaCara(); break;
-    case 2: dibujaCuerpo(); break;
-    case 3: dibujaBrazoIzq(); break;
-    case 4: dibujaBrazoDer(); break;
-    case 5: dibujaPiernaIzq(); break;
-    case 6: dibujaPiernaDer(); break;
-    case 7: dibujaAhorcado(); break;
+    case 1: drawFace(); break;
+    case 2: drawBody(); break;
+    case 3: drawLeftArm(); break;
+    case 4: drawRightArm(); break;
+    case 5: drawLeftLeg(); break;
+    case 6: drawRightArm(); break;
+    case 7: drawHangman(); break;
    }
   }
  }
 }
 
 
-function dibujaCara() {
+function drawFace() {
+ ctx.beginPath();
  ctx.arc(100,50,25,0,Math.PI*2,true);
+ ctx.closePath();
  ctx.stroke();
- }
+}
 
-function dibujaCuerpo() {
+function drawBody() {
  ctx.beginPath();
  ctx.moveTo(75,75);
  ctx.lineTo(125,75);
@@ -174,7 +230,7 @@ function dibujaCuerpo() {
  ctx.stroke();
 }
 
-function dibujaBrazoIzq() {
+function drawLeftArm() {
  ctx.beginPath();
  ctx.moveTo(75,75);
  ctx.lineTo(50,100);
@@ -185,7 +241,7 @@ function dibujaBrazoIzq() {
  ctx.stroke();
 }
 
-function dibujaBrazoDer() {
+function drawRightArm() {
  ctx.beginPath();
  ctx.moveTo(125,75);
  ctx.lineTo(150,100);
@@ -196,7 +252,7 @@ function dibujaBrazoDer() {
  ctx.stroke();
 }
 
-function dibujaPiernaIzq() {
+function drawLeftLeg() {
  ctx.beginPath();
  ctx.moveTo(75,150);
  ctx.lineTo(95,150);
@@ -207,7 +263,7 @@ function dibujaPiernaIzq() {
  ctx.stroke();
 }
 
-function dibujaPiernaDer() {
+function drawRightLeg() {
  ctx.beginPath();
  ctx.moveTo(105,150);
  ctx.lineTo(125,150);
@@ -218,7 +274,7 @@ function dibujaPiernaDer() {
  ctx.stroke();
 }
 
-function dibujaAhorcado() {
+function drawHangman() {
  ctx.fillStyle = "red";
  ctx.beginPath();
  ctx.arc(100,50,25,0,Math.PI*2,true);
@@ -227,29 +283,29 @@ function dibujaAhorcado() {
  ctx.fill();
 }
 
-function dibujaAcertado() {
+function drawSuccess() {
  ctx.fillStyle = "yellow";
  ctx.beginPath();
  
- // Cabeza
+ // Head
  ctx.arc(100,50,25,0,Math.PI*2,true);
  ctx.fill();
 
- // Boca
+ // Mouth
  ctx.beginPath();
  ctx.moveTo(100,50);
  ctx.arc(100,50,10,0,Math.PI,false);
  ctx.closePath();
  ctx.stroke();
 
- // Ojo
+ // One eye
  ctx.beginPath();
  ctx.moveTo(93,40); 
  ctx.arc(93,40,2,0,Math.PI*2,true);
  ctx.closePath();
  ctx.stroke();
  
- // Otro ojo
+ // Another eye
  ctx.beginPath();
  ctx.moveTo(107,40); 
  ctx.arc(107,40,2,0,Math.PI*2,true);
@@ -258,52 +314,47 @@ function dibujaAcertado() {
 }
 
 
-function encajarLetra(letra) {
- var botonLetra = document.getElementById(letra);
- botonLetra.style.visibility = "hidden";
- if (!letraEnLista(letra,palabra)) {
+function matchLetter(letter) {
+ var letterButton = document.getElementById(letter);
+ letterButton.style.visibility = "hidden";
+ if (!letterInWord(letter,word)) {
 
-  // Si la tecla no está en la palabra = fallo
-  // Se añade a la lista de fallos si no se había añadido ya
-  if (!letraEnLista(letra,fallos)) {
-	fallos.push(letra);
-    guardar('fallos',fallos);
-	ponLetras();
-	pintarElemento(fallos.length);
+  // If key is not in word = failure 
+  // Insert in failures unless it was already there
+  if (!letterInWord(letter,failures)) {
+	failures.push(letter);
+    store('failures',failures);
+	paintLetters();
+	paintElement(failures.length);
   }
  }
  else {
-  // Acierto (si no estaba en la lista de aciertos, se mete)
-  if (!letraEnLista(letra,aciertos)) {
-   aciertos.push(letra);
-   guardar('aciertos',aciertos);
-   ponLetras();
-   // Comprobar si ya se acertaron todas las letras
-   if (todasAcertadas(palabra,aciertos)) {
-    dibujaAcertado();
-	finJuego("Has ganado");
+  // Success (if it was not in the successes, insert it)
+  if (!letterInWord(letter,successes)) {
+   successes.push(letter);
+   store('successes',successes);
+   paintLetters();
+   if (allGuessed(word,successes)) {
+    drawSuccess();
+	endGame("You won");
    }
   }
  }
 }
 
-function todasAcertadas(palabra,aciertos) {
- for (var i=0; i<palabra.length; i++) {
-  if (!letraEnLista(palabra[i],aciertos)) return false;
+function allGuessed(word,successes) {
+ for (var i=0; i<word.length; i++) {
+  if (!letterInWord(word[i],successes)) return false;
  }
  return true;
 }
 
-function letraEnLista(letra,palabra) {
- // Antes: return (palabra.indexOf(letra) != -1);
- // Utilizo función de jQuery por compatibilidad con IE
- return (jQuery.inArray(letra,palabra)!= -1);
+function letterInWord(letter,word) {
+ return (jQuery.inArray(letter,word)!= -1);
 }
 
-function finJuego(mensaje) {
- jugando = false;
- window.alert(mensaje);
- nuevoJuego(); 
- pintarJuego();
+function endGame(msg) {
+ inGame = false;
+ window.alert(msg);
+ newGame(); 
 }
-

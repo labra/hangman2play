@@ -5,6 +5,7 @@
 # Home page
 
 GET     /                                   controllers.Game.index
+GET     /newGame                            controllers.Game.newGame
 GET     /words                           	controllers.Words.index
 
 # Authentication

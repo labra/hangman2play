@@ -19,9 +19,14 @@ object Game extends Controller {
    
   def index = Action { implicit request =>
     val lang = Words.getLang(request,session)
-    Ok(views.html.game(langs,lang))
+    Ok(views.html.game(langs,lang,false))
   }
 
+  def newGame = Action { implicit request =>
+    val lang = Words.getLang(request,session)
+    Ok(views.html.game(langs,lang,true))
+  }
+  
   def about = Action { implicit request =>
     val lang = Words.getLang(request,session)
     Ok(views.html.about(lang))

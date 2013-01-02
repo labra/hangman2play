@@ -14,7 +14,7 @@ body {
  height: 100%;
 }
 
-#principal h1 {
+#main h1 {
  margin: 0px;
  font-family: PortcullionBold ;
  font-variant: small-caps;
@@ -24,18 +24,18 @@ body {
  text-shadow: #F2F2F2 2px 2px 2px;
 }
 
-#campoLetras {
+#lettersField {
  float:left;
  width: 50%;
 }
 
-#letras {
+#letters {
  font-family: Lobster ;
  font-size: xx-large;
  color: green;
 }
 
-#intentos {
+#trials {
  float:right;
  font-family: Monospace ;
  font-size: normal;
@@ -43,13 +43,13 @@ body {
  letter-spacing: 0.5em;
 }
 
-#dibujo {
+#draw {
  text-align: center;
  width: 40%; 
  float: right;
 } 
 
-#dibujo:hover {
+#draw:hover {
  -webkit-transform: rotate(10deg);
  -moz-transform: rotate(10deg);
  -o-transform: rotate(10deg);
@@ -60,7 +60,7 @@ body {
  border: 3px outset;
 }
 
-.botLetra {
+.letterButton {
  height: 2em;
  width: 2em;
  font-size: 1.5em;
@@ -70,7 +70,7 @@ body {
  box-shadow: 3px 3px 5px 6px grey;
 }
 
-#panelAyuda {
+#helpPanel {
 	height: 100%;
 	width: 20em;
 	position: absolute;
@@ -83,11 +83,11 @@ body {
     transition: left 0.3s ease-in; 
 }
 
-#panelAyuda:hover {
+#helpPanel:hover {
 	left : 70%;
 }
 
-#Ayuda {
+#Help {
 	height: 100%;
 	width: 60%;
 	padding: 5px;
@@ -101,10 +101,10 @@ body {
 }
 
 
-#panelAyuda:hover #pedirAyuda {
+#helpPanel:hover #askHelp {
 }
 
-#pedirAyuda {
+#askHelp {
     position: relative;
 	top: 50% ;
 	left: -55%;
@@ -121,7 +121,7 @@ body {
 	text-shadow: #F2F2F2 1px 1px 1px;
 }
 
-#panelAyuda h1 { 
+#helpPanel h1 { 
     font-family: serif;
 	font-size: large;
 	padding: 0px; 

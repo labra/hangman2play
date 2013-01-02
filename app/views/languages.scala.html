@@ -17,6 +17,7 @@
             <td>@language.id</td>
             <td>@language.code</td>
             <td>@language.name</td>
+            <td>@language.alphabet</td>
             <td>
                 @form(routes.Admin.deleteLanguage(language.id.get)) {
                     <input type="submit" value="Delete">
@@ -32,6 +33,7 @@
         @inputText(languageForm("id"), '_label -> "id")
         @inputText(languageForm("code"), '_label -> "code")
         @inputText(languageForm("name"), '_label -> "name")
+        @inputText(languageForm("alphabet"), '_label -> "alphabet")
         
         <input type="submit" value="@Messages("Create") ">
         

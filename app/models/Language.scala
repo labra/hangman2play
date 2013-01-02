@@ -10,14 +10,15 @@ import anorm.SqlParser._
 case class Language(
 	id: Pk[Long], 
 	code: String,
-	name: String
+	name: String,
+	alphabet: String
 )
 
 object Language{
 
   val language = {
-	get[Pk[Long]]("id") ~ get[String]("code")~ get[String]("name") map {
-  	  case id~code~name => Language(id, code, name)
+	get[Pk[Long]]("id") ~ get[String]("code") ~ get[String]("name") ~ get[String]("alphabet") map {
+  	  case id~code~name~alphabet => Language(id, code, name, alphabet)
   	}
   }
   
@@ -29,9 +30,10 @@ def create(language: Language) {
   // Insert a course only if it did not exist
   if (lookup(language.code) == None) 
    DB.withConnection { implicit c =>
-     SQL("insert into language (code,name) values ({code},{name})").on(
+     SQL("insert into language (code,name,alphabet) values ({code},{name},{alphabet})").on(
        'code -> language.code,
-       'name -> language.name
+       'name -> language.name,
+       'alphabet -> language.alphabet
      ).executeUpdate()
    }
 }
@@ -65,6 +67,12 @@ def delete(id: Pk[Long]) {
      id <- lookup(code)
      language <- find(id)
    } yield language
+ }
+
+  def findAlphabet(code : String) : String = {
+    findLanguage(code) match {
+      case Some(language) => language.alphabet
+    }
  }
 
  def findLanguageName(id : Long) : Option[String] = {

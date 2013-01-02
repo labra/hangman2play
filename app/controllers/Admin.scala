@@ -105,7 +105,8 @@ object Admin extends Controller  with Secured {
       mapping(
       "id" -> ignored(NotAssigned:Pk[Long]),
       "code" -> nonEmptyText,
-      "name" -> nonEmptyText
+      "name" -> nonEmptyText,
+      "alphabet" -> nonEmptyText
       )(Language.apply)(Language.unapply)
   )
 

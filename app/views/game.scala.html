@@ -1,4 +1,4 @@
-@(langs: Seq[Lang], lang : Lang)
+@(langs: Seq[Lang], lang : Lang, newGame : Boolean)
 
 @import helper._
 
@@ -23,28 +23,43 @@
       		<option value="@lang.language">@Messages(lang.language)(lang)</option>
     	}
 	    </select>
-	    <input type="submit" >
+	    <input type="submit" value='@Messages("Submit")(lang)'>
 	}
     </div>
-    
-  <section id="principal">
+  <div id="language" code="@lang.language" alphabet="@Language.findAlphabet(lang.language)"></div>
+  <div id="newGame" value="@newGame"></div>
+  
+  <div id="debug">
+    <div id="placeholder"></div>
+    Word: 
+    <span id="word"></span>| 
+    Words: <span id="words"></span>|
+    Language: <span id="languageInfo"></span>|
+    Alphabet: <span id="alphabetInfo"></span>
+    Successes: <span id="successes"></span>
+    Failures: <span id="failures"></span>
+  </div> 
+
+  <input type="button" onclick="newGame()" value='@Messages("NewGame")(lang)' />
+
+  <section id="main">
    <h1>@Messages("Title")(lang)</h1>
-    <fieldset id="campoLetras">
+    <fieldset id="lettersField">
 	<legend>@Messages("Guess")(lang). (@Messages(lang.code)(lang))</legend>
-	<output id="letras"> </output>
+	<output id="letters"> </output>
 	<hr>
-	<div id="botonesLetras"></div>
+	<div id="alphabet"></div>
    </fieldset>
 
-   <div id="dibujo">
+   <div id="draw">
     <canvas id="idCanvas" width="200" height="200">
 	  @Messages("NoCanvas")(lang)
 	</canvas>
    </div>
 
-  <section id="panelAyuda">
-   <a id="pedirAyuda">@Messages("ShowHelp")(lang)</a>
-   <article id="Ayuda">
+  <section id="helpPanel">
+   <a id="askHelp">@Messages("ShowHelp")(lang)</a>
+   <article id="Help">
     <h1>@Messages("Help")(lang)</h1>
     <p>El juego consiste en ir pulsando teclas 
        hasta que se adivine la palabra.</p>

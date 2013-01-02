@@ -28,7 +28,7 @@ object Words extends Controller {
   	langForm.bindFromRequest.fold(
   		errors => NotFound("Cannot select language" + errors),
   		lang => { 
-  		  Redirect(routes.Game.index).withSession("prefLang" -> lang)
+  		  Redirect(routes.Game.newGame).withSession("prefLang" -> lang)
   		}
     )
   }

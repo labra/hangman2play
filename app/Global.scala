@@ -28,8 +28,9 @@ object InitialData {
       ).foreach(User.create)
 
       Seq(
-        Language(Id(1),"en","English"),
-        Language(Id(2),"es","Spanish")
+        Language(Id(1),"en","English","ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+        Language(Id(2),"es","Spanish","ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"),
+        Language(Id(3),"hy","հայերեն","ԱԲԳԴԵԶԷԸԹԺԻԼԽՑԿՀԾՂՃՄՅՆՇՈՉՊՋՌՍՎՏՐՑՒՓՔՕՖ")
       ).foreach(Language.create)
 
       Seq(
@@ -37,9 +38,10 @@ object InitialData {
         ViewWord(2,"es","parada"),
         ViewWord(3,"en","word"),
         ViewWord(4,"es","palabra"),
-        ViewWord(4,"en","english")
+        ViewWord(5,"en","english"),
+        ViewWord(6,"hy","հայերեն"),
+        ViewWord(7,"es","hola")
       ).foreach(vw => Word.create(Language.lookup(vw.language).get,vw.word))
-
     }
   }
 }
