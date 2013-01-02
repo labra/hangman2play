@@ -112,13 +112,13 @@ function newGame() {
 		 successes = [];
 		 failures = [];
 		  
-		 $("#words").html(words.toString);
+/*		 $("#words").html(words.toString);
 		 $("#word").html(word);
 		 $("#languageInfo").html(language);
 		 $("#alphabetInfo").html(alphabet);
 		 $("#successes").html(successes.toString);
 		 $("#failures").html(failures.toString);
-
+*/
 		 if (ls) {
 		   store('inGame',true);
 		   store('word',word);
