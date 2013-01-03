@@ -12,6 +12,8 @@ import anorm._
 import views.html.defaultpages.badRequest
 import play.api.Play.current
 import play.api.libs.json._
+import play.api.libs.Jsonp
+
 
 object Words extends Controller {
   
@@ -70,17 +72,19 @@ object Words extends Controller {
         case None => NotFound(Messages("LanguageNotFound"))
         case Some(language) => {
            val words = Word.lookupWords(language.code)
-           Ok(prepareJson(language,words))
+           val json = prepareJson(language,words)           
+           request.queryString.get("callback").flatMap(_.headOption) match {
+             case Some(callback) => Ok(Jsonp(callback, json))
+             case None => Ok(json)
+           }
         }
       }
   }
 
-  def prepareJson(language: Language, words: List[String]) : String = {
-    val json = Json.toJson(Map (
+  def prepareJson(language: Language, words: List[String]) : JsValue = {
+    Json.toJson(Map (
     			"language" -> Json.toJson(language.code),
                 "words" -> Json.toJson (words)))
-                
-    Json.stringify(json)
   }
   
   val searchForm : Form[SearchField] = Form (
